@@ -3,7 +3,7 @@ game 'gta5'
 lua54 'yes'
 
 name 'whip_postals'
-description 'Postal codes (civici) on whip\'s pause map and HUD minimap, with their own look and map theme'
+description 'Postal codes on whip\'s pause map and HUD minimap, with /gps and five languages'
 version '1.2.0'
 dependency 'whip_core'
 

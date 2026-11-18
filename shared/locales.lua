@@ -1,8 +1,8 @@
--- Lingue di whip_postals — lato Lua.
+-- Languages for whip_postals - Lua side.
 --
--- Una sola fonte: nui/locales.json, letto anche dalla NUI (nui/extension.js).
--- Per cambiare lingua basta la riga "locale" in cima a quel file: it, en, es, fr, de.
--- Le stringhe mancanti cadono su 'en', poi su 'it', poi sul nome della chiave.
+-- One source of truth: nui/locales.json, also read by the NUI (nui/extension.js).
+-- Change the "locale" line at the top of that file to switch: it, en, es, fr, de.
+-- Missing strings fall back to 'en', then 'it', then the key name itself.
 
 WhipPostals = WhipPostals or {}
 
@@ -29,8 +29,8 @@ local function data()
     return cache
 end
 
---- Testo localizzato. `key` usa la notazione con punti, per esempio 'gps.notFound'.
---- I segnaposto sono quelli di string.format (%s, %d, ...).
+--- Localized text. `key` uses dot notation, for example 'gps.notFound'.
+--- Placeholders are those of string.format (%s, %d, ...).
 function WhipPostals.locale(key, ...)
     local d = data()
     if not d then return tostring(key) end
@@ -46,7 +46,7 @@ function WhipPostals.locale(key, ...)
     return value
 end
 
---- Lingua attiva e nome leggibile, per la documentazione e i log.
+--- Active language and display name, for logs and documentation.
 function WhipPostals.localeInfo()
     local d = data()
     if not d then return 'it', 'Italiano' end

@@ -2,7 +2,7 @@
 // whip_postals — CONFIG
 // ============================================
 //
-// Postal codes (civici) on whip's maps, and how they look.
+// Postal codes on whip's maps, and how they look.
 //
 // Read once, when whip_core's page loads. After an edit run `restart whip_core` (the NUI page reloads
 // with the resource); restarting whip_postals on its own only takes effect after a reconnect.

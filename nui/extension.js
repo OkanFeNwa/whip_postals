@@ -1,5 +1,5 @@
 // ============================================
-// whip_postals — postal codes (civici) on whip's maps
+// whip_postals — postal codes on whip's maps
 // ============================================
 //
 // whip_core's page loads this file from ONE line in html/index.html:
@@ -12,7 +12,7 @@
 //   pause map   js/pause-map.js's PauseMap: one label canvas under the blips, repainted on every draw()
 //   minimap     js/map3d/map3d.js's MinimapCamera: a canvas inside the clip, following the map's own view
 //   colours     ...WhipMap3D.setPalette: the theme in config.js
-//   editor      the "Civici" panel, off by default (EDITOR_ENABLED near the top)
+//   editor      the "Postals" panel, off by default (EDITOR_ENABLED near the top)
 //
 // Every hook calls the original first and only adds to it, so blips, the GPS line, the waypoint, the 3D
 // tilt, zoom, follow and the minimap's own settings keep working exactly as they did.
@@ -88,7 +88,7 @@ const HEIGHT_EM = 1.52;
 const EMPTY = [];
 
 /**
- * The in-game editor (the "Civici" button on the pause menu's map) is off for now. Nothing of it is built
+ * The in-game editor (the "Postals" button on the pause menu's map) is off for now. Nothing of it is built
  * and no key scope is registered, so the map looks and behaves as if it were not there. All the code is
  * still below: set this to true and `restart whip_core` (the page is fetched once per resource) to have it
  * back. The style is still read from config.js, so labels and colours keep working either way.
@@ -938,7 +938,7 @@ function patchMap3D(mod) {
 // THE EDITOR — the same numbers, with a face
 // ============================================
 //
-// Opened from the pause menu's map ("Civici", top right). Everything is live: the labels on the map
+// Opened from the pause menu's map ("Postals", top right). Everything is live: the labels on the map
 // behind the panel and the sample chips at its top change as a control moves.
 //
 // WHAT IT WRITES, AND WHERE. The player's own choices go to localStorage (this NUI page's origin,
@@ -946,9 +946,8 @@ function patchMap3D(mod) {
 // and a restart. config.js itself is a resource file the page cannot write, so the panel also
 // produces the whole file to copy — that is how a choice becomes the server's default.
 //
-// WHY localStorage: SendNUIMessage and NUI callbacks belong to the resource that owns a page.
-// whip_core's page cannot talk to whip_postals' Lua, and this resource has no Lua at all, so the
-// browser's own storage is the only channel both sides can rely on.
+// WHY localStorage: the page belongs to whip_core, so SendNUIMessage and NUI callbacks from this
+// resource cannot reach it. The browser's own storage is the channel a satellite can rely on.
 
 const STORE = 'whip_postals.style.v2';
 const LEGACY_STORE = 'whip_postals.style.v1';
@@ -1069,7 +1068,7 @@ const refreshers = [];               // each control's "read the config back int
 const FONTS = () => [
     ["'Barlow', 'Segoe UI', system-ui, sans-serif", 'Barlow'],
     ["'Segoe UI', system-ui, sans-serif", 'Segoe UI'],
-    ['system-ui, sans-serif', tr('ui.fontSystem', 'Sistema')],
+    ['system-ui, sans-serif', tr('ui.fontSystem', 'System')],
     ["'Trebuchet MS', 'Segoe UI', sans-serif", 'Trebuchet'],
     ['Georgia, serif', 'Georgia'],
     ["'Courier New', monospace", 'Courier'],
@@ -1077,34 +1076,34 @@ const FONTS = () => [
 ];
 
 const WEIGHTS = () => [
-    ['400', tr('weight.thin', 'Sottile · 400')],
-    ['500', tr('weight.normal', 'Normale · 500')],
-    ['600', tr('weight.medium', 'Medio · 600')],
-    ['700', tr('weight.bold', 'Grassetto · 700')],
-    ['800', tr('weight.heavy', 'Pesante · 800')],
-    ['900', tr('weight.black', 'Nero · 900')],
+    ['400', tr('weight.thin', 'Thin · 400')],
+    ['500', tr('weight.normal', 'Normal · 500')],
+    ['600', tr('weight.medium', 'Medium · 600')],
+    ['700', tr('weight.bold', 'Bold · 700')],
+    ['800', tr('weight.heavy', 'Heavy · 800')],
+    ['900', tr('weight.black', 'Black · 900')],
 ];
 
 const SHADOWS = () => [
-    ['none', tr('shadow.none', 'Nessuna')],
-    ['0 1px 2px rgba(0, 0, 0, 0.55)', tr('shadow.light', 'Leggera')],
-    ['0 1px 3px rgba(0, 0, 0, 0.5)', tr('shadow.soft', 'Morbida')],
-    ['0 2px 6px rgba(0, 0, 0, 0.7)', tr('shadow.medium', 'Media')],
-    ['0 3px 10px rgba(0, 0, 0, 0.85)', tr('shadow.strong', 'Forte')],
+    ['none', tr('shadow.none', 'None')],
+    ['0 1px 2px rgba(0, 0, 0, 0.55)', tr('shadow.light', 'Light')],
+    ['0 1px 3px rgba(0, 0, 0, 0.5)', tr('shadow.soft', 'Soft')],
+    ['0 2px 6px rgba(0, 0, 0, 0.7)', tr('shadow.medium', 'Medium')],
+    ['0 3px 10px rgba(0, 0, 0, 0.85)', tr('shadow.strong', 'Strong')],
 ];
 
 const TSHADOWS = () => [
-    ['none', tr('tshadow.none', 'Nessuna')],
-    ['0 1px 2px rgba(0, 0, 0, 0.8)', tr('tshadow.light', 'Leggera')],
-    ['0 1px 2px rgba(0, 0, 0, 0.85)', tr('tshadow.crisp', 'Nitida')],
-    ['0 1px 3px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.6)', tr('tshadow.medium', 'Media')],
+    ['none', tr('tshadow.none', 'None')],
+    ['0 1px 2px rgba(0, 0, 0, 0.8)', tr('tshadow.light', 'Light')],
+    ['0 1px 2px rgba(0, 0, 0, 0.85)', tr('tshadow.crisp', 'Crisp')],
+    ['0 1px 3px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.6)', tr('tshadow.medium', 'Medium')],
 ];
 
 const PRESETS = () => [
-    ['midnight', tr('preset.midnight', 'Midnight · blu scuro')],
-    ['paper', tr('preset.paper', 'Paper · atlante chiaro')],
+    ['midnight', tr('preset.midnight', 'Midnight · dark blue')],
+    ['paper', tr('preset.paper', 'Paper · light atlas')],
     ['whip', tr('preset.whip', 'Whip · default')],
-    ['custom', tr('preset.custom', 'Personalizzato')],
+    ['custom', tr('preset.custom', 'Custom')],
 ];
 
 function makeEl(tag, cls, text) {
@@ -1176,7 +1175,7 @@ function rowSelect(text, options, get, set) {
         if (!found) {
             const o = document.createElement('option');
             o.value = v;
-            o.textContent = tr('ui.custom', 'Personalizzato');
+            o.textContent = tr('ui.custom', 'Custom');
             sel.appendChild(o);
         }
         sel.value = v;
@@ -1286,26 +1285,26 @@ function buildEditor() {
     const openBtn = document.createElement('button');
     openBtn.type = 'button';
     openBtn.className = 'wp-open';
-    openBtn.title = tr('ui.buttonTitle', 'Civici e colori della mappa');
+    openBtn.title = tr('ui.buttonTitle', 'Postal codes and map colours');
     openBtn.appendChild(makeEl('span', 'wp-open-dot'));
-    openBtn.appendChild(makeEl('span', '', tr('ui.button', 'Civici')));
+    openBtn.appendChild(makeEl('span', '', tr('ui.button', 'Postals')));
     openBtn.addEventListener('click', () => setEditor(true));
 
     const panel = makeEl('div', 'wp-ed');
     panel.id = 'wp-editor';
 
     const head = makeEl('div', 'wp-ed-head');
-    head.appendChild(makeEl('div', 'wp-ed-title', tr('ui.title', 'Civici e mappa')));
+    head.appendChild(makeEl('div', 'wp-ed-title', tr('ui.title', 'Postals and map')));
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.className = 'wp-ed-close';
     closeBtn.textContent = '×';
-    closeBtn.title = tr('ui.close', 'Chiudi');
+    closeBtn.title = tr('ui.close', 'Close');
     closeBtn.addEventListener('click', () => setEditor(false));
     head.appendChild(closeBtn);
     panel.appendChild(head);
     panel.appendChild(makeEl('div', 'wp-ed-sub',
-        tr('ui.subtitle', 'Quello che scegli qui vale subito per te e resta su questo client. Per renderlo il default del server, esporta il file.')));
+        tr('ui.subtitle', 'Your choices here apply at once and stay on this client. To make them the server default, export the file.')));
 
     // The two sample labels: the styles, at their real size.
     const prev = makeEl('div', 'wp-preview');
@@ -1319,15 +1318,15 @@ function buildEditor() {
         prev.appendChild(box);
         return wrap;
     };
-    const samplePause = sample(tr('ui.samplePause', 'Mappa grande'));
-    const sampleMini = sample(tr('ui.sampleMini', 'Minimappa'));
+    const samplePause = sample(tr('ui.samplePause', 'Big map'));
+    const sampleMini = sample(tr('ui.sampleMini', 'Minimap'));
     panel.appendChild(prev);
 
     // Tabs and their panes.
     const tabsEl = makeEl('div', 'wp-ed-tabs');
     const tabs = [];
     const panes = [];
-    [tr('ui.samplePause', 'Mappa grande'), tr('ui.sampleMini', 'Minimappa'), tr('ui.colours', 'Colori')].forEach((name, i) => {
+    [tr('ui.samplePause', 'Big map'), tr('ui.sampleMini', 'Minimap'), tr('ui.colours', 'Colours')].forEach((name, i) => {
         const b = document.createElement('button');
         b.type = 'button';
         b.className = 'wp-ed-tab';
@@ -1346,96 +1345,96 @@ function buildEditor() {
 
     // ---- big map ----
     const p0 = panes[0];
-    p0.appendChild(secHead(tr('ui.labels', 'Etichette')));
-    p0.appendChild(rowToggle(tr('ui.show', 'Mostra i civici'), () => CFG.labels.pause.enabled,
+    p0.appendChild(secHead(tr('ui.labels', 'Labels')));
+    p0.appendChild(rowToggle(tr('ui.show', 'Show postal codes'), () => CFG.labels.pause.enabled,
         (v) => { CFG.labels.pause.enabled = v; }));
-    p0.appendChild(rowToggle(tr('ui.declutter', 'Evita le sovrapposizioni'), () => !!CFG.labels.pause.declutter,
+    p0.appendChild(rowToggle(tr('ui.declutter', 'Avoid overlaps'), () => !!CFG.labels.pause.declutter,
         (v) => { CFG.labels.pause.declutter = v; }));
-    p0.appendChild(rowRange(tr('ui.size', 'Dimensione'), 7, 24, 0.5,
+    p0.appendChild(rowRange(tr('ui.size', 'Size'), 7, 24, 0.5,
         () => CFG.labels.pause.size, (v) => { CFG.labels.pause.size = v; },
         (v) => v.toFixed(1) + ' px'));
-    p0.appendChild(rowSelect(tr('ui.weight', 'Peso del testo'), WEIGHTS(),
+    p0.appendChild(rowSelect(tr('ui.weight', 'Font weight'), WEIGHTS(),
         () => CFG.labels.pause.weight, (v) => { CFG.labels.pause.weight = Number(v); }));
     p0.appendChild(rowSelect(tr('ui.font', 'Font'), FONTS(),
         () => CFG.labels.pause.font, (v) => { CFG.labels.pause.font = v; }));
-    p0.appendChild(secHead(tr('ui.colourAndShape', 'Colori e forma')));
-    p0.appendChild(rowColour(tr('ui.text', 'Testo'), () => CFG.labels.pause.colour,
+    p0.appendChild(secHead(tr('ui.colourAndShape', 'Colour and shape')));
+    p0.appendChild(rowColour(tr('ui.text', 'Text'), () => CFG.labels.pause.colour,
         (v) => { CFG.labels.pause.colour = v; }, false));
-    p0.appendChild(rowColour(tr('ui.background', 'Sfondo'), () => CFG.labels.pause.background,
+    p0.appendChild(rowColour(tr('ui.background', 'Background'), () => CFG.labels.pause.background,
         (v) => { CFG.labels.pause.background = v; }, true));
-    p0.appendChild(rowColour(tr('ui.border', 'Bordo'), () => CFG.labels.pause.borderColour,
+    p0.appendChild(rowColour(tr('ui.border', 'Border'), () => CFG.labels.pause.borderColour,
         (v) => { CFG.labels.pause.borderColour = v; }, true));
-    p0.appendChild(rowRange(tr('ui.borderWidth', 'Spessore bordo'), 0, 3, 0.5,
+    p0.appendChild(rowRange(tr('ui.borderWidth', 'Border width'), 0, 3, 0.5,
         () => parseFloat(CFG.labels.pause.borderWidth) || 0,
         (v) => { CFG.labels.pause.borderWidth = v + 'px'; }, (v) => v.toFixed(1) + ' px'));
-    p0.appendChild(rowRange(tr('ui.radius', 'Raggio'), 0, 16, 1,
+    p0.appendChild(rowRange(tr('ui.radius', 'Radius'), 0, 16, 1,
         () => parseFloat(CFG.labels.pause.radius) || 0,
         (v) => { CFG.labels.pause.radius = v + 'px'; }, (v) => v.toFixed(0) + ' px'));
-    p0.appendChild(rowRange(tr('ui.padX', 'Spazio orizzontale'), 0, 1.2, 0.02,
+    p0.appendChild(rowRange(tr('ui.padX', 'Horizontal padding'), 0, 1.2, 0.02,
         () => parseFloat(CFG.labels.pause.padX) || 0,
         (v) => { CFG.labels.pause.padX = v.toFixed(2) + 'em'; }, (v) => v.toFixed(2) + ' em'));
-    p0.appendChild(rowRange(tr('ui.padY', 'Spazio verticale'), 0, 1, 0.02,
+    p0.appendChild(rowRange(tr('ui.padY', 'Vertical padding'), 0, 1, 0.02,
         () => parseFloat(CFG.labels.pause.padY) || 0,
         (v) => { CFG.labels.pause.padY = v.toFixed(2) + 'em'; }, (v) => v.toFixed(2) + ' em'));
-    p0.appendChild(rowRange(tr('ui.opacity', 'Opacità'), 0, 1, 0.05,
+    p0.appendChild(rowRange(tr('ui.opacity', 'Opacity'), 0, 1, 0.05,
         () => Number(CFG.labels.pause.opacity), (v) => { CFG.labels.pause.opacity = v; },
         (v) => Math.round(v * 100) + '%'));
-    p0.appendChild(rowSelect(tr('ui.shadow', 'Ombra'), SHADOWS(),
+    p0.appendChild(rowSelect(tr('ui.shadow', 'Shadow'), SHADOWS(),
         () => CFG.labels.pause.shadow, (v) => { CFG.labels.pause.shadow = v; }));
-    p0.appendChild(rowSelect(tr('ui.textShadow', 'Ombra del testo'), TSHADOWS(),
+    p0.appendChild(rowSelect(tr('ui.textShadow', 'Text shadow'), TSHADOWS(),
         () => CFG.labels.pause.textShadow, (v) => { CFG.labels.pause.textShadow = v; }));
 
     // ---- minimap ----
     const p1 = panes[1];
-    p1.appendChild(secHead(tr('ui.labels', 'Etichette')));
-    p1.appendChild(rowToggle(tr('ui.show', 'Mostra i civici'), () => CFG.labels.minimap.enabled,
+    p1.appendChild(secHead(tr('ui.labels', 'Labels')));
+    p1.appendChild(rowToggle(tr('ui.show', 'Show postal codes'), () => CFG.labels.minimap.enabled,
         (v) => { CFG.labels.minimap.enabled = v; }));
-    p1.appendChild(rowToggle(tr('ui.declutter', 'Evita le sovrapposizioni'), () => !!CFG.labels.minimap.declutter,
+    p1.appendChild(rowToggle(tr('ui.declutter', 'Avoid overlaps'), () => !!CFG.labels.minimap.declutter,
         (v) => { CFG.labels.minimap.declutter = v; }));
-    p1.appendChild(rowRange(tr('ui.size', 'Dimensione'), 6, 16, 0.5,
+    p1.appendChild(rowRange(tr('ui.size', 'Size'), 6, 16, 0.5,
         () => CFG.labels.minimap.size, (v) => { CFG.labels.minimap.size = v; },
         (v) => v.toFixed(1) + ' px'));
-    p1.appendChild(rowSelect(tr('ui.weight', 'Peso del testo'), WEIGHTS(),
+    p1.appendChild(rowSelect(tr('ui.weight', 'Font weight'), WEIGHTS(),
         () => CFG.labels.minimap.weight, (v) => { CFG.labels.minimap.weight = Number(v); }));
     p1.appendChild(rowSelect(tr('ui.font', 'Font'), FONTS(),
         () => CFG.labels.minimap.font, (v) => { CFG.labels.minimap.font = v; }));
-    p1.appendChild(secHead(tr('ui.colourAndShape', 'Colori e forma')));
-    p1.appendChild(rowColour(tr('ui.text', 'Testo'), () => CFG.labels.minimap.colour,
+    p1.appendChild(secHead(tr('ui.colourAndShape', 'Colour and shape')));
+    p1.appendChild(rowColour(tr('ui.text', 'Text'), () => CFG.labels.minimap.colour,
         (v) => { CFG.labels.minimap.colour = v; }, false));
-    p1.appendChild(rowColour(tr('ui.background', 'Sfondo'), () => CFG.labels.minimap.background,
+    p1.appendChild(rowColour(tr('ui.background', 'Background'), () => CFG.labels.minimap.background,
         (v) => { CFG.labels.minimap.background = v; }, true));
-    p1.appendChild(rowColour(tr('ui.border', 'Bordo'), () => CFG.labels.minimap.borderColour,
+    p1.appendChild(rowColour(tr('ui.border', 'Border'), () => CFG.labels.minimap.borderColour,
         (v) => { CFG.labels.minimap.borderColour = v; }, true));
-    p1.appendChild(rowRange(tr('ui.borderWidth', 'Spessore bordo'), 0, 3, 0.5,
+    p1.appendChild(rowRange(tr('ui.borderWidth', 'Border width'), 0, 3, 0.5,
         () => parseFloat(CFG.labels.minimap.borderWidth) || 0,
         (v) => { CFG.labels.minimap.borderWidth = v + 'px'; }, (v) => v.toFixed(1) + ' px'));
-    p1.appendChild(rowRange(tr('ui.radius', 'Raggio'), 0, 12, 1,
+    p1.appendChild(rowRange(tr('ui.radius', 'Radius'), 0, 12, 1,
         () => parseFloat(CFG.labels.minimap.radius) || 0,
         (v) => { CFG.labels.minimap.radius = v + 'px'; }, (v) => v.toFixed(0) + ' px'));
-    p1.appendChild(rowRange(tr('ui.padX', 'Spazio orizzontale'), 0, 1, 0.02,
+    p1.appendChild(rowRange(tr('ui.padX', 'Horizontal padding'), 0, 1, 0.02,
         () => parseFloat(CFG.labels.minimap.padX) || 0,
         (v) => { CFG.labels.minimap.padX = v.toFixed(2) + 'em'; }, (v) => v.toFixed(2) + ' em'));
-    p1.appendChild(rowRange(tr('ui.padY', 'Spazio verticale'), 0, 1, 0.02,
+    p1.appendChild(rowRange(tr('ui.padY', 'Vertical padding'), 0, 1, 0.02,
         () => parseFloat(CFG.labels.minimap.padY) || 0,
         (v) => { CFG.labels.minimap.padY = v.toFixed(2) + 'em'; }, (v) => v.toFixed(2) + ' em'));
-    p1.appendChild(rowRange(tr('ui.opacity', 'Opacità'), 0, 1, 0.05,
+    p1.appendChild(rowRange(tr('ui.opacity', 'Opacity'), 0, 1, 0.05,
         () => Number(CFG.labels.minimap.opacity), (v) => { CFG.labels.minimap.opacity = v; },
         (v) => Math.round(v * 100) + '%'));
-    p1.appendChild(secHead(tr('ui.when', 'Quando mostrarli')));
-    p1.appendChild(rowRange(tr('ui.minPx', 'Visibili sotto'), 0.2, 1.5, 0.05,
+    p1.appendChild(secHead(tr('ui.when', 'When to show them')));
+    p1.appendChild(rowRange(tr('ui.minPx', 'Visible above'), 0.2, 1.5, 0.05,
         () => Number(CFG.labels.minimap.minPxPerMetre),
         (v) => { CFG.labels.minimap.minPxPerMetre = v; },
         (v) => v.toFixed(2) + ' px/m · ' + Math.round(330 / v) + ' m'));
-    p1.appendChild(rowRange(tr('ui.max', 'Massimo per frame'), 20, 160, 10,
+    p1.appendChild(rowRange(tr('ui.max', 'Maximum per frame'), 20, 160, 10,
         () => Number(CFG.labels.minimap.max), (v) => { CFG.labels.minimap.max = v; },
         (v) => v.toFixed(0)));
     p1.appendChild(makeEl('div', 'wp-ed-sub',
-        tr('ui.miniNote', 'La minimappa è dietro il menu: guarda la pastiglia qui sopra, e il risultato sull\'HUD quando chiudi.')));
+        tr('ui.miniNote', 'The minimap sits behind the menu: watch the sample above, and the HUD when you close.')));
 
     // ---- colours ----
     const p2 = panes[2];
-    p2.appendChild(secHead(tr('ui.theme', 'Tema')));
-    p2.appendChild(rowToggle(tr('ui.themeEnabled', 'Colori del tema attivi'), () => CFG.theme.enabled,
+    p2.appendChild(secHead(tr('ui.theme', 'Theme')));
+    p2.appendChild(rowToggle(tr('ui.themeEnabled', 'Theme colours on'), () => CFG.theme.enabled,
         (v) => { CFG.theme.enabled = v; }));
     p2.appendChild(rowSelect(tr('ui.preset', 'Preset'), PRESETS(),
         () => CFG.theme.preset,
@@ -1446,32 +1445,32 @@ function buildEditor() {
             CFG.theme.enabled = true;
             refreshAll();
         }));
-    p2.appendChild(secHead(tr('ui.colours', 'Colori')));
+    p2.appendChild(secHead(tr('ui.colours', 'Colours')));
     const labels = {
-        deep: tr('colour.deep', 'Mare profondo'), shore: tr('colour.shore', 'Costa'), land: tr('colour.land', 'Terra'), build: tr('colour.build', 'Edifici'), build2: tr('colour.build2', 'Edifici (tono 2)'),
-        path: tr('colour.path', 'Sentieri'), road: tr('colour.road', 'Strade'), hwy: tr('colour.hwy', 'Autostrade'),
+        deep: tr('colour.deep', 'Deep sea'), shore: tr('colour.shore', 'Coast'), land: tr('colour.land', 'Land'), build: tr('colour.build', 'Buildings'), build2: tr('colour.build2', 'Buildings (tone 2)'),
+        path: tr('colour.path', 'Paths'), road: tr('colour.road', 'Roads'), hwy: tr('colour.hwy', 'Motorways'),
     };
     for (const k of KEYS) p2.appendChild(rowThemeColour(k, labels[k]));
     p2.appendChild(makeEl('div', 'wp-ed-sub',
-        tr('ui.colourNote', 'Toccare un colore passa il preset a Personalizzato. Le scelte si vedono sulla mappa dietro il pannello.')));
+        tr('ui.colourNote', 'Changing a colour switches the preset to Custom. The result shows on the map behind the panel.')));
 
     // ---- footer ----
     const foot = makeEl('div', 'wp-ed-foot');
-    const resetBtn = makeEl('button', 'wp-btn', tr('ui.reset', 'Reimposta'));
+    const resetBtn = makeEl('button', 'wp-btn', tr('ui.reset', 'Reset'));
     resetBtn.type = 'button';
     let arm = 0;
     resetBtn.addEventListener('click', () => {
         if (!arm) {
-            resetBtn.textContent = tr('ui.resetConfirm', 'Confermi?');
-            arm = setTimeout(() => { arm = 0; resetBtn.textContent = tr('ui.reset', 'Reimposta'); }, 3000);
+            resetBtn.textContent = tr('ui.resetConfirm', 'Sure?');
+            arm = setTimeout(() => { arm = 0; resetBtn.textContent = tr('ui.reset', 'Reset'); }, 3000);
             return;
         }
         clearTimeout(arm);
         arm = 0;
-        resetBtn.textContent = tr('ui.reset', 'Reimposta');
+        resetBtn.textContent = tr('ui.reset', 'Reset');
         resetAll();
     });
-    const expBtn = makeEl('button', 'wp-btn primary', tr('ui.export', 'Esporta config.js'));
+    const expBtn = makeEl('button', 'wp-btn primary', tr('ui.export', 'Export config.js'));
     expBtn.type = 'button';
     foot.append(resetBtn, expBtn);
     panel.appendChild(foot);
@@ -1490,12 +1489,11 @@ function buildEditor() {
     ta.spellcheck = false;
     ta.readOnly = true;
     const expNote = makeEl('div', 'wp-export-note',
-        tr('ui.exportNote', 'Salvalo come [custom]/whip_postals/nui/config.js (sostituendo il file), poi esegui restart whip_core. '
-            + 'Restart whip_postals da solo non basta: la pagina carica il file quando si apre.'));
+        tr('ui.exportNote', 'Save it as whip_postals/nui/config.js (replacing the file), then run restart whip_core. Restarting whip_postals alone is not enough: the page loads the file when it opens.'));
     const expActs = makeEl('div', 'wp-ed-foot');
-    const copyBtn = makeEl('button', 'wp-btn primary', tr('ui.copy', 'Copia'));
+    const copyBtn = makeEl('button', 'wp-btn primary', tr('ui.copy', 'Copy'));
     copyBtn.type = 'button';
-    const doneBtn = makeEl('button', 'wp-btn', tr('ui.close', 'Chiudi'));
+    const doneBtn = makeEl('button', 'wp-btn', tr('ui.close', 'Close'));
     doneBtn.type = 'button';
     doneBtn.addEventListener('click', () => exp.classList.remove('on'));
     expActs.append(copyBtn, doneBtn);
@@ -1504,7 +1502,7 @@ function buildEditor() {
 
     expBtn.addEventListener('click', () => {
         ta.value = exportText();
-        copyBtn.textContent = tr('ui.copy', 'Copia');
+        copyBtn.textContent = tr('ui.copy', 'Copy');
         exp.classList.add('on');
     });
     copyBtn.addEventListener('click', () => {
@@ -1513,8 +1511,8 @@ function buildEditor() {
         let ok = false;
         try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
         if (navigator.clipboard) navigator.clipboard.writeText(ta.value).catch(() => {});
-        copyBtn.textContent = ok ? tr('ui.copied', 'Copiato') : tr('ui.selected', 'Selezionato · Ctrl+C');
-        setTimeout(() => { copyBtn.textContent = tr('ui.copy', 'Copia'); }, 1800);
+        copyBtn.textContent = ok ? tr('ui.copied', 'Copied') : tr('ui.selected', 'Selected · Ctrl+C');
+        setTimeout(() => { copyBtn.textContent = tr('ui.copy', 'Copy'); }, 1800);
     });
 
     root.append(openBtn, panel);
@@ -1558,23 +1556,23 @@ function exportText() {
 // whip_postals — CONFIG
 // ============================================
 //
-// ${tr('export.from', "Esportato dall'editor in gioco del menu pausa (Mappa > Civici).")}
-// ${tr('export.save', 'Salvalo come [custom]/whip_postals/nui/config.js, poi: restart whip_core')}
+// ${tr('export.from', "Exported from the in-game pause-menu editor (Map > Postals).")}
+// ${tr('export.save', 'Save it as whip_postals/nui/config.js, then: restart whip_core')}
 //
-// ${tr('export.labels', 'labels  i numeri sulla mappa grande e sulla minimappa')}
-// ${tr('export.theme', 'theme   i colori della mappa: mare, terra, edifici, sentieri, strade, autostrade')}
+// ${tr('export.labels', 'labels  the numbers on the big map and the minimap')}
+// ${tr('export.theme', 'theme   the map\'s colours: sea, land, buildings, paths, roads, motorways')}
 
 export const config = {
     postals: ${q(CFG.postals)},
 
     labels: {
-        // ---- ${tr('export.pause', 'il menu pausa e la finestra Map di /whip')} ----
+        // ---- ${tr('export.pause', 'the pause menu and /whip\'s Map window')} ----
         pause: {
 ${block(p, ['enabled', 'declutter', 'minPxPerMetre', 'size', 'weight', 'font', 'letterSpacing', 'colour', 'background',
         'borderWidth', 'borderColour', 'radius', 'padY', 'padX', 'shadow', 'textShadow', 'opacity'], '            ')}
         },
 
-        // ---- ${tr('export.hudMinimap', "la minimappa dell'HUD (e la sua anteprima nelle Impostazioni)")} ----
+        // ---- ${tr('export.hudMinimap', "the HUD minimap (and its preview in Settings)")} ----
         minimap: {
 ${block(m, ['enabled', 'declutter', 'size', 'weight', 'font', 'letterSpacing', 'colour', 'background',
         'borderWidth', 'borderColour', 'radius', 'padY', 'padX', 'shadow', 'textShadow', 'opacity',
@@ -1591,7 +1589,7 @@ ${block(m, ['enabled', 'declutter', 'size', 'weight', 'font', 'letterSpacing', '
 ${presetText}
         },
 
-        // ${tr('export.themeModes', "usati quando preset è 'custom'")}
+        // ${tr('export.themeModes', "used when preset is 'custom'")}
         colours: {
 ${colourText}
         },
@@ -1707,6 +1705,6 @@ if (EDITOR_ENABLED) {
             if (ui && ui.export.classList.contains('on')) ui.export.classList.remove('on');
             else setEditor(false);
         },
-        padHints: () => [['b', tr('ui.close', 'Chiudi')]],
+        padHints: () => [['b', tr('ui.close', 'Close')]],
     });
 }

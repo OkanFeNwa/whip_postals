@@ -1,11 +1,11 @@
 <#
-    install-core-hook.ps1 — aggiunge (o aggiorna) a whip_core/html/index.html il blocco che carica
-    nui/extension.js. Il blocco e' un loader con retry: whip_core parte prima di whip_postals, quindi
-    l'host NUI della risorsa dei civici potrebbe non esistere ancora quando la pagina si apre.
+    install-core-hook.ps1 - adds (or updates) the loader block in whip_core/html/index.html that loads
+    nui/extension.js. It is a retry loader: whip_core starts before whip_postals, so the resource's NUI
+    host may not exist yet when the page opens.
 
-    MANUALE, NESSUNA automatica: non e' dichiarato in fxmanifest.lua, non e' servito dalla NUI e non e'
-    caricato dal server. Non c'e' watcher, pianificazione o evento: il file non fa niente finche' non
-    lo esegui tu con install-core-hook.cmd (che passa il flag -Manual).
+    MANUAL ONLY: it is not declared in fxmanifest.lua, is not served to NUI and is not loaded by the
+    server. There is no watcher, schedule or event: the file does nothing until you run it with -Manual,
+    which only install-core-hook.cmd passes.
 #>
 
 [CmdletBinding()]
@@ -17,14 +17,15 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if (-not $Manual) {
-    Write-Host 'Nessuna modifica eseguita.'
-    Write-Host 'Questo script si lancia solo a mano: fai doppio clic su tools/install-core-hook.cmd'
+    Write-Host 'No changes made.'
+    Write-Host 'This script only runs by hand: double-click tools/install-core-hook.cmd'
     exit 1
 }
 
-$loaderMarker = '[whip_postals][BOOT]'
+# Present only in the current English loader, so an older hook is migrated instead of skipped.
+$loaderMarker = "OK (attempt '"
 $hook = @'
-<!-- Postal codes (civici) on the pause map and the minimap, and the map's colours: [custom]/whip_postals.
+<!-- Postal codes on the pause map and the minimap, plus the map colours, from the whip_postals resource.
      whip_core starts before whip_postals in server.cfg, so the NUI host may not exist yet: retry until it does.
      Delete this block to go back to the stock map; the resource can then be stopped too. -->
 <script>
@@ -45,10 +46,10 @@ $hook = @'
                 if (!r.ok) throw new Error('HTTP ' + r.status);
                 return import(url);
             })
-            .then(function () { note('OK (tentativo ' + tries + ')'); })
+            .then(function () { note('OK (attempt ' + tries + ')'); })
             .catch(function (e) {
                 var m = (e && (e.stack || e.message)) || String(e);
-                note('caricamento non riuscito: ' + m);
+                note('load failed: ' + m);
                 if (tries < 60) setTimeout(boot, 500);
             });
     }
@@ -57,8 +58,8 @@ $hook = @'
 </script>
 '@
 
-# tools/ -> whip_postals/ -> [custom]/ -> resources/ -> poi whip_core, dentro [core] o alla radice.
-# Proviamo entrambe le posizioni: l'utente puo' aver raggruppato i resource WHIP in [core].
+# tools/ -> whip_postals/ -> parent folder -> resources/ -> whip_core, inside [core] or at the root.
+# Check both positions: a server may group WHIP resources in [core] or keep them at the root.
 $candidates = @(
     (Join-Path $PSScriptRoot '..\..\..\[core]\whip_core\html\index.html'),
     (Join-Path $PSScriptRoot '..\..\..\whip_core\html\index.html')
@@ -71,7 +72,7 @@ foreach ($candidate in $candidates) {
     }
 }
 if (-not $core) {
-    throw ("Non trovo whip_core/html/index.html in: " + ($candidates -join ', '))
+    throw ("Cannot find whip_core/html/index.html in: " + ($candidates -join ', '))
 }
 
 $text = [IO.File]::ReadAllText($core)
@@ -86,23 +87,23 @@ function Save-WithBackup([string]$newText, [string]$why) {
     [IO.File]::WriteAllText($backup, $script:text, $utf8)
     [IO.File]::WriteAllText($script:core, $newText, $utf8)
     Write-Host "$why in: $($script:core)"
-    Write-Host "Backup del vecchio index.html: $backup"
+    Write-Host "Backup of the previous index.html: $backup"
     Write-Host ''
-    Write-Host 'Ora dagli in console: restart whip_core'
+    Write-Host 'Now run in the server console: restart whip_core'
 }
 
-# Gia' corretto: non tocca niente (anche dopo piu' aggiornamenti).
+# Already current: touch nothing, create no backup.
 if ($text.IndexOf($loaderMarker, [System.StringComparison]::Ordinal) -ge 0) {
-    Write-Host 'Hook gia presente con il loader con retry. Nessuna modifica.'
+    Write-Host 'Hook already present with the retry loader. No changes.'
     exit 0
 }
 
-# Rimuove qualsiasi versione precedente dell'hook (module line, diagnostic temporaneo, ecc.).
+# Remove any previous version of the hook (old single-line module tag, temporary diagnostics, etc.).
 $lines = $text -split "`r?`n"
 $clean = New-Object 'System.Collections.Generic.List[string]'
 $skipping = $false
 foreach ($line in $lines) {
-    if ($line -match 'Postal codes \(civici\)' -or $line -match 'DIAGNOSTICO TEMPORANEO') {
+    if ($line -match 'Postal codes .*on the pause map' -or $line -match 'DIAGNOSTICO TEMPORANEO' -or $line -match 'TEMPORARY DIAGNOSTIC') {
         $skipping = $true
         continue
     }
@@ -115,14 +116,14 @@ foreach ($line in $lines) {
 }
 $cleanText = [string]::Join($nl, $clean)
 
-# Installazione: subito dopo il modulo entry di whip_core.
+# Install right after whip_core's own entry module.
 $rx = '(?m)^(?<indent>[ \t]*)<script[ \t]+type="module"[ \t]+src="js/main\.js"[ \t]*></script>[ \t]*(?=\r?$)'
 $m = [regex]::Match($cleanText, $rx)
 if (-not $m.Success) {
-    throw 'Non trovo la riga di js/main.js: la struttura di whip_core e cambiata. Controlla a mano.'
+    throw 'Cannot find the js/main.js line: whip_core layout changed. Check manually.'
 }
 
 $anchorLine = $m.Value.TrimEnd("`r")
 $insert = $anchorLine + $nl + $m.Groups['indent'].Value + $hook
 $newText = $cleanText.Substring(0, $m.Index) + $insert + $cleanText.Substring($m.Index + $m.Length)
-Save-WithBackup $newText 'Hook inserito/aggiornato'
+Save-WithBackup $newText 'Hook inserted/updated'
