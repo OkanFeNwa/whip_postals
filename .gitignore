@@ -1,0 +1,9 @@
+# Created by the manual hook installer
+tools/backups/
+*.bak
+
+# Local logs / editor noise
+*.log
+.vscode/
+.DS_Store
+Thumbs.db
