@@ -1,4 +1,4 @@
--- /gps <civico> — server side.
+-- /gps <postal> - server side.
 --
 -- The postal table is read from the same postals.json the NUI uses, so the command and the labels can
 -- never disagree. The server resolves the code and sends only the coordinates to the player: a client

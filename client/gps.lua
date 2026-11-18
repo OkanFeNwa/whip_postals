@@ -1,4 +1,4 @@
--- /gps <civico> — client side: only sets the GTA waypoint on the player's own map.
+-- /gps <postal> - client side: only sets the GTA waypoint on the player's own map.
 -- The coordinates always come from server/gps.lua, which looked them up in nui/postals.json.
 
 RegisterNetEvent('whip_postals:setGps', function(x, y)

@@ -515,7 +515,7 @@ function styleVars(s) {
 
 // ---- labels: one canvas per map ----
 //
-// 865 civic numbers as DOM elements mean 865 boxes to place and paint on every pan, zoom and glide —
+// 865 postal numbers as DOM elements mean 865 boxes to place and paint on every pan, zoom and glide -
 // the map, which draws on change, ends up waiting for the browser. They are painted on a canvas
 // instead: one element per map, one paint, and panning re-runs only measureText/fillText. The look
 // (font, colours, border, radius, paddings, shadows, opacity) is the same config the editor writes.
@@ -715,7 +715,7 @@ function drawPause(map) {
 
     // Every postal in view is drawn. `declutter` — off by default — brings back the anti-overlap grid: one
     // label per world-anchored cell, the cell growing until the labels fit. With it off the labels may
-    // overlap when the map is zoomed out, which is the point: no civic is left out.
+    // overlap when the map is zoomed out, which is the point: no postal is left out.
     let picks;
     if (cfg.declutter) {
         const maxN = clamp(Math.round((W * H) / (fs * fs * 50)), 24, 380);

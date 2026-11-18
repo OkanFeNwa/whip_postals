@@ -23,7 +23,7 @@ export const config = {
         // ---- the big map: the pause menu and /whip's Map window ----
         pause: {
             enabled: true,
-            // false = every civic in view is drawn (labels may overlap when zoomed out).
+            // false = every postal in view is drawn (labels may overlap when zoomed out).
             // true  = hide the ones that would overlap: at most one label per world grid cell.
             declutter: false,
             // Below this many screen px per metre the map shows too much ground and the numbers turn into
